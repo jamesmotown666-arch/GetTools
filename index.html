@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GetTools - Free online tools for calculations, conversions and everyday tasks.">
+<title>GetTools — Free Online Tools</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #17181c;
+  --muted: #70747d;
+  --border: #e5e7eb;
+  --accent: #111827;
+  --accentText: #ffffff;
+  --input: #f9fafb;
+}
+
+body.dark {
+  --bg: #0d0f12;
+  --card: #17191e;
+  --text: #f5f5f5;
+  --muted: #9ca3af;
+  --border: #292d35;
+  --accent: #ffffff;
+  --accentText: #111111;
+  --input: #20232a;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: 0.25s;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  max-width: 1150px;
+  margin: auto;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  opacity: .45;
+}
+
+.theme {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+.hero {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+  padding: 80px 20px 50px;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 8vw, 72px);
+  line-height: .95;
+  letter-spacing: -4px;
+  margin-bottom: 22px;
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 620px;
+  margin: auto;
+}
+
+.search {
+  max-width: 600px;
+  margin: 35px auto 0;
+}
+
+.search input {
+  width: 100%;
+  padding: 17px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+}
+
+.container {
+  max-width: 1150px;
+  margin: auto;
+  padding: 20px;
+}
+
+.section-title {
+  margin-bottom: 20px;
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding-bottom: 70px;
+}
+
+.tool {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.tool:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.icon {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.tool h3 {
+  margin-bottom: 8px;
+  font-size: 19px;
+}
+
+.tool p {
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.no-results {
+  display: none;
+  text-align: center;
+  color: var(--muted);
+  padding: 30px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 50;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 550px;
+  background: var(--card);
+  color: var(--text);
+  border-radius: 22px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 25px 70px rgba(0,0,0,.25);
+}
+
+.close {
+  position: absolute;
+  right: 18px;
+  top: 15px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.modal h2 {
+  margin-bottom: 8px;
+  padding-right: 30px;
+}
+
+.modal-description {
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin: 15px 0 7px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+}
+
+button.primary {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--accent);
+  color: var(--accentText);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button.secondary {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 12px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.big-result {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input);
+  color: var(--text);
+  font-size: 16px;
+}
+
+.calc-display {
+  font-size: 28px;
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+}
+
+.calc-grid button {
+  padding: 17px 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 17px;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 800px) {
+  .tools {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .tools {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 55px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .modal-box {
+    padding: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">Get<span>Tools</span></div>
+    <button class="theme" onclick="toggleTheme()">◐ Theme</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Useful tools.<br>Made simple.</h1>
+  <p>
+    Free online tools for calculations, conversions, productivity
+    and everyday tasks.
+  </p>
+
+  <div class="search">
+    <input
+      type="text"
+      id="search"
+      placeholder="Search tools..."
+      oninput="searchTools()"
+    >
+  </div>
+</section>
+
+<main class="container">
+
+  <h2 class="section-title">All tools</h2>
+
+  <div class="tools" id="tools">
+
+    <div class="tool" data-name="calculator" onclick="openTool('calculator')">
+      <div class="icon">🧮</div>
+      <h3>Calculator</h3>
+      <p>Perform quick mathematical calculations.</p>
+    </div>
+
+    <div class="tool" data-name="bmi bmi calculator" onclick="openTool('bmi')">
+      <div class="icon">⚖️</div>
+      <h3>BMI Calculator</h3>
+      <p>Calculate your Body Mass Index.</p>
+    </div>
+
+    <div class="tool" data-name="age age calculator" onclick="openTool('age')">
+      <div class="icon">🎂</div>
+      <h3>Age Calculator</h3>
+      <p>Find your exact age from your birth date.</p>
+    </div>
+
+    <div class="tool" data-name="percentage percentage calculator" onclick="openTool('percentage')">
+      <div class="icon">📊</div>
+      <h3>Percentage</h3>
+      <p>Calculate percentages quickly and easily.</p>
+    </div>
+
+    <div class="tool" data-name="tip tip calculator" onclick="openTool('tip')">
+      <div class="icon">💰</div>
+      <h3>Tip Calculator</h3>
+      <p>Calculate tips, totals and bill splits.</p>
+    </div>
+
+    <div class="tool" data-name="temperature temperature converter" onclick="openTool('temperature')">
+      <div class="icon">🌡️</div>
+      <h3>Temperature</h3>
+      <p>Convert Celsius, Fahrenheit and Kelvin.</p>
+    </div>
+
+    <div class="tool" data-name="length length converter" onclick="openTool('length')">
+      <div class="icon">📏</div>
+      <h3>Length Converter</h3>
+      <p>Convert common units of length.</p>
+    </div>
+
+    <div class="tool" data-name="word words counter" onclick="openTool('words')">
+      <div class="icon">📝</div>
+      <h3>Word Counter</h3>
+      <p>Count words and characters in your text.</p>
+    </div>
+
+    <div class="tool" data-name="password password generator" onclick="openTool('password')">
+      <div class="icon">🔐</div>
+      <h3>Password Generator</h3>
+      <p>Create strong random passwords.</p>
+    </div>
+
+    <div class="tool" data-name="countdown countdown timer" onclick="openTool('countdown')">
+      <div class="icon">⏱️</div>
+      <h3>Countdown</h3>
+      <p>Create a countdown to any date and time.</p>
+    </div>
+
+  </div>
+
+  <div class="no-results" id="noResults">
+    No tools found.
+  </div>
+
+</main>
+
+<footer>
+  © 2026 GetTools. Free tools for everyone.
+</footer>
+
+
+<div class="modal" id="modal" onclick="backgroundClose(event)">
+  <div class="modal-box">
+    <button class="close" onclick="closeTool()">×</button>
+
+    <h2 id="modalTitle"></h2>
+    <p class="modal-description" id="modalDescription"></p>
+
+    <div id="toolContent"></div>
+  </div>
+</div>
+
+
+<script>
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
+}
+
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+
+function openTool(tool) {
+
+  const modal = document.getElementById("modal");
+  const title = document.getElementById("modalTitle");
+  const description = document.getElementById("modalDescription");
+  const content = document.getElementById("toolContent");
+
+  modal.classList.add("show");
+
+  if (tool === "calculator") {
+    title.textContent = "Calculator";
+    description.textContent = "Perform basic mathematical calculations.";
+
+    content.innerHTML = `
+      <input class="calc-display" id="calcDisplay" readonly value="0">
+
+      <div class="calc-grid">
+        <button onclick="calcClear()">C</button>
+        <button onclick="calcDelete()">⌫</button>
+        <button onclick="calcInput('/')">÷</button>
+        <button onclick="calcInput('*')">×</button>
+
+        <button onclick="calcInput('7')">7</button>
+        <button onclick="calcInput('8')">8</button>
+        <button onclick="calcInput('9')">9</button>
+        <button onclick="calcInput('-')">−</button>
+
+        <button onclick="calcInput('4')">4</button>
+        <button onclick="calcInput('5')">5</button>
+        <button onclick="calcInput('6')">6</button>
+        <button onclick="calcInput('+')">+</button>
+
+        <button onclick="calcInput('1')">1</button>
+        <button onclick="calcInput('2')">2</button>
+        <button onclick="calcInput('3')">3</button>
+        <button onclick="calcResult()">=</button>
+
+        <button onclick="calcInput('0')" style="grid-column:span 2">0</button>
+        <button onclick="calcInput('.')">.</button>
+      </div>
+    `;
+  }
+
+
+  else if (tool === "bmi") {
+    title.textContent = "BMI Calculator";
+    description.textContent = "Calculate your Body Mass Index.";
+
+    content.innerHTML = `
+      <label>Weight (kg)</label>
+      <input type="number" id="bmiWeight" placeholder="e.g. 70">
+
+      <label>Height (cm)</label>
+      <input type="number" id="bmiHeight" placeholder="e.g. 170">
+
+      <button class="primary" onclick="calculateBMI()">Calculate BMI</button>
+
+      <div class="result" id="bmiResult">Enter your details.</div>
+    `;
+  }
+
+
+  else if (tool === "age") {
+    title.textContent = "Age Calculator";
+    description.textContent = "Find your age from your date of birth.";
+
+    content.innerHTML = `
+      <label>Date of birth</label>
+      <input type="date" id="birthDate">
+
+      <button class="primary" onclick="calculateAge()">Calculate Age</button>
+
+      <div class="result" id="ageResult">Select your birthday.</div>
+    `;
+  }
+
+
+  else if (tool === "percentage") {
+    title.textContent = "Percentage Calculator";
+    description.textContent = "Calculate percentages instantly.";
+
+    content.innerHTML = `
+      <label>What is X% of Y?</label>
+
+      <input type="number" id="percentX" placeholder="X">
+
+      <label>Number</label>
+      <input type="number" id="percentY" placeholder="Y">
+
+      <button class="primary" onclick="calculatePercentage()">Calculate</button>
+
+      <div class="result" id="percentResult">Enter two numbers.</div>
+    `;
+  }
+
+
+  else if (tool === "tip") {
+    title.textContent = "Tip Calculator";
+    description.textContent = "Calculate your tip and split the bill.";
+
+    content.innerHTML = `
+      <label>Bill amount</label>
+      <input type="number" id="bill" placeholder="100">
+
+      <label>Tip percentage</label>
+      <input type="number" id="tipPercent" value="15">
+
+      <label>Number of people</label>
+      <input type="number" id="people" value="1" min="1">
+
+      <button class="primary" onclick="calculateTip()">Calculate</button>
+
+      <div class="result" id="tipResult">Enter your bill.</div>
+    `;
+  }
+
+
+  else if (tool === "temperature") {
+    title.textContent = "Temperature Converter";
+    description.textContent = "Convert between Celsius, Fahrenheit and Kelvin.";
+
+    content.innerHTML = `
+      <label>Temperature</label>
+      <input type="number" id="tempValue" placeholder="Enter temperature">
+
+      <label>From</label>
+      <select id="tempFrom">
+        <option value="C">Celsius</option>
+        <option value="F">Fahrenheit</option>
+        <option value="K">Kelvin</option>
+      </select>
+
+      <label>To</label>
+      <select id="tempTo">
+        <option value="F">Fahrenheit</option>
+        <option value="C">Celsius</option>
+        <option value="K">Kelvin</option>
+      </select>
+
+      <button class="primary" onclick="convertTemperature()">Convert</button>
+
+      <div class="result" id="tempResult">Enter a temperature.</div>
+    `;
+  }
+
+
+  else if (tool === "length") {
+    title.textContent = "Length Converter";
+    description.textContent = "Convert between common length units.";
+
+    content.innerHTML = `
+      <label>Value</label>
+      <input type="number" id="lengthValue" placeholder="Enter value">
+
+      <label>From</label>
+      <select id="lengthFrom">
+        <option value="mm">Millimetres</option>
+        <option value="cm">Centimetres</option>
+        <option value="m">Metres</option>
+        <option value="km">Kilometres</option>
+        <option value="in">Inches</option>
+        <option value="ft">Feet</option>
+      </select>
+
+      <label>To</label>
+      <select id="lengthTo">
+        <option value="cm">Centimetres</option>
+        <option value="m">Metres</option>
+        <option value="km">Kilometres</option>
+        <option value="in">Inches</option>
+        <option value="ft">Feet</option>
+        <option value="mm">Millimetres</option>
+      </select>
+
+      <button class="primary" onclick="convertLength()">Convert</button>
+
+      <div class="result" id="lengthResult">Enter a value.</div>
+    `;
+  }
+
+
+  else if (tool === "words") {
+    title.textContent = "Word Counter";
+    description.textContent = "Count words and characters in your text.";
+
+    content.innerHTML = `
+      <textarea id="wordText" oninput="countWords()" placeholder="Start typing or paste your text..."></textarea>
+
+      <div class="result" id="wordResult">
+        Words: 0<br>
+        Characters: 0<br>
+        Characters without spaces: 0
+      </div>
+    `;
+  }
+
+
+  else if (tool === "password") {
+    title.textContent = "Password Generator";
+    description.textContent = "Generate a strong random password.";
+
+    content.innerHTML = `
+      <label>Password length</label>
+      <input type="number" id="passwordLength" value="16" min="4" max="100">
+
+      <button class="primary" onclick="generatePassword()">Generate Password</button>
+
+      <div class="result" id="passwordResult">
+        Your password will appear here.
+      </div>
+
+      <button class="secondary" onclick="copyPassword()">Copy Password</button>
+    `;
+  }
+
+
+  else if (tool === "countdown") {
+    title.textContent = "Countdown Timer";
+    description.textContent = "Countdown to a date and time.";
+
+    content.innerHTML = `
+      <label>Date and time</label>
+      <input type="datetime-local" id="countdownDate">
+
+      <button class="primary" onclick="startCountdown()">Start Countdown</button>
+
+      <div class="result" id="countdownResult">
+        Choose a date.
+      </div>
+    `;
+  }
+}
+
+
+function closeTool() {
+  document.getElementById("modal").classList.remove("show");
+}
+
+
+function backgroundClose(event) {
+  if (event.target.id === "modal") {
+    closeTool();
+  }
+}
+
+
+/* CALCULATOR */
+
+function calcInput(value) {
+  const display = document.getElementById("calcDisplay");
+
+  if (display.value === "0") {
+    display.value = value;
+  } else {
+    display.value += value;
+  }
+}
+
+
+function calcClear() {
+  document.getElementById("calcDisplay").value = "0";
+}
+
+
+function calcDelete() {
+  const display = document.getElementById("calcDisplay");
+
+  display.value = display.value.slice(0,-1);
+
+  if (display.value === "") {
+    display.value = "0";
+  }
+}
+
+
+function calcResult() {
+  const display = document.getElementById("calcDisplay");
+
+  try {
+    const expression = display.value;
+
+    if (!/^[0-9+\-*/.() ]+$/.test(expression)) {
+      throw new Error();
+    }
+
+    display.value = Function("return " + expression)();
+
+  } catch {
+    display.value = "Error";
+  }
+}
+
+
+/* BMI */
+
+function calculateBMI() {
+
+  const weight = parseFloat(document.getElementById("bmiWeight").value);
+  const height = parseFloat(document.getElementById("bmiHeight").value);
+
+  const result = document.getElementById("bmiResult");
+
+  if (!weight || !height || weight <= 0 || height <= 0) {
+    result.innerHTML = "Please enter a valid weight and height.";
+    return;
+  }
+
+  const meters = height / 100;
+  const bmi = weight / (meters * meters);
+
+  let category;
+
+  if (bmi < 18.5) {
+    category = "Underweight";
+  } else if (bmi < 25) {
+    category = "Normal weight";
+  } else if (bmi < 30) {
+    category = "Overweight";
+  } else {
+    category = "Obesity";
+  }
+
+  result.innerHTML = `
+    <div class="big-result">${bmi.toFixed(1)}</div>
+    <strong>${category}</strong>
+  `;
+}
+
+
+/* AGE */
+
+function calculateAge() {
+
+  const input = document.getElementById("birthDate").value;
+  const result = document.getElementById("ageResult");
+
+  if (!input) {
+    result.textContent = "Please select your date of birth.";
+    return;
+  }
+
+  const birth = new Date(input + "T00:00:00");
+  const today = new Date();
+
+  if (birth > today) {
+    result.textContent = "Birth date cannot be in the future.";
+    return;
+  }
+
+  let years = today.getFullYear() - birth.getFullYear();
+  let months = today.getMonth() - birth.getMonth();
+
+  if (
+    months < 0 ||
+    (months === 0 && today.getDate() < birth.getDate())
+  ) {
+    years--;
+  }
+
+  result.innerHTML = `
+    <div class="big-result">${years}</div>
+    years old
+  `;
+}
+
+
+/* PERCENTAGE */
+
+function calculatePercentage() {
+
+  const x = parseFloat(document.getElementById("percentX").value);
+  const y = parseFloat(document.getElementById("percentY").value);
+
+  const result = document.getElementById("percentResult");
+
+  if (isNaN(x) || isNaN(y)) {
+    result.textContent = "Please enter both numbers.";
+    return;
+  }
+
+  const answer = (x / 100) * y;
+
+  result.innerHTML = `
+    <div class="big-result">${answer}</div>
+  `;
+}
+
+
+/* TIP */
+
+function calculateTip() {
+
+  const bill = parseFloat(document.getElementById("bill").value);
+  const percent = parseFloat(document.getElementById("tipPercent").value);
+  const people = parseInt(document.getElementById("people").value);
+
+  const result = document.getElementById("tipResult");
+
+  if (
+    isNaN(bill) ||
+    isNaN(percent) ||
+    isNaN(people) ||
+    bill < 0 ||
+    people < 1
+  ) {
+    result.textContent = "Please enter valid values.";
+    return;
+  }
+
+  const tip = bill * percent / 100;
+  const total = bill + tip;
+  const each = total / people;
+
+  result.innerHTML = `
+    Tip: <strong>${tip.toFixed(2)}</strong><br>
+    Total: <strong>${total.toFixed(2)}</strong><br>
+    Each person: <strong>${each.toFixed(2)}</strong>
+  `;
+}
+
+
+/* TEMPERATURE */
+
+function convertTemperature() {
+
+  const value = parseFloat(document.getElementById("tempValue").value);
+  const from = document.getElementById("tempFrom").value;
+  const to = document.getElementById("tempTo").value;
+
+  const result = document.getE
